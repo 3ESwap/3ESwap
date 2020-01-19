@@ -1,6 +1,5 @@
 body {
-  /*padding-top: 56px;*/
-  margin-top: 5rem;
+  padding-top: 56px;
 }
 
 main {
@@ -21,8 +20,9 @@ main {
 }
 
 .article-img {
-  height: 65px;
-  width: 65px;
+  min-height: 200px;
+  max-height: 300px;
+  min-width: 250px;
   margin-right: 16px;
 }
 

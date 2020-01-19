@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+
+    <div class="col-lg-3">
+
+
+        <h1 class="my-4">
+            {% if current_user.username == user.username %}
+            My Store
+            {% else %}
+            {{ user.username }}'s Store
+            {% endif %}
+            ({{ posts.total }})
+        </h1>
+        <div class="list-group">
+            <a href="#" class="list-group-item">Clothes</a>
+        </div>
+
+    </div>
+    <!-- /.col-lg-3 -->
+
+    <div class="col-lg-9">
+
+        <div class="row my-4">
+
+            {% for post in posts.items %}
+            <div class="col-lg-4 col-md-6 mb-4 media">
+                <div class="card h-100">
+                    <a href="{{ url_for('post', post_id=post.id) }}"><img class="card-img-top article-img"
+                            src="{{ url_for('static', filename='img/profile_pics/' + post.author.image_file) }}"
+                            alt=""></a>
+                    <div class="card-body media-body">
+                        <div class="article-metadata">
+                            <h4 class="card-title">
+                                <a href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a>
+                            </h4>
+                            <h5>$1.00</h5>
+                            <a class="mr-2"
+                                href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+                            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <p class="card-text">{{ post.content }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- /.row -->
+
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+        {% if posts.page == page_num %}
+        <a class="btn btn-info mb-4"
+            href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+        <a class="btn btn-outline-info mb-4"
+            href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+        {% endfor %}
+
+    </div>
+    <!-- /.col-lg-9 -->
+
+</div>
+<!-- /.row -->
+{% endblock %}
