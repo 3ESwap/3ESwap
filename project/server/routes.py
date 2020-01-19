@@ -59,14 +59,19 @@ def logout():
     return redirect(url_for('home'))
 
 
-def save_picture(form_picture):
+def save_picture(form_picture, picture_folder):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     #picture_path = os.path.join(app.root_path, '../templates/img/profile_pics', picture_fn)
-    picture_path = os.path.join(app.root_path, '../client/img/profile_pics', picture_fn)
+    picture_path = os.path.join(app.root_path, '../client/img/'+picture_folder, picture_fn)
+    print(picture_path)
     
-    output_size = (125, 125)
+    if picture_folder == 'profile_pics':
+        output_size = (125, 125)
+    else:
+        output_size = (300, 250)
+    
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -80,7 +85,7 @@ def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
-            picture_file = save_picture(form.picture.data)
+            picture_file = save_picture(form.picture.data, 'profile_pics')
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -94,12 +99,14 @@ def account():
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
 
-@app.route("/post/new", methods=['GET', 'POST'])
+@app.route("/post/new", methods=['GET','POST'])
 @login_required
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        picture_file = save_picture(form.picture.data, 'post_pics')
+        image_file = url_for('static', filename='/img/post_pics/' + picture_file)
+        post = Post(title=form.title.data, content=form.content.data, author=current_user, image_file=picture_file)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')

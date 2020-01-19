@@ -60,4 +60,9 @@ class UpdateAccountForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
+    picture = FileField('Update Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     submit = SubmitField('Post')
+    
+    def validate_picture(self, picture):
+        if not picture.data:
+            raise ValidationError('Please choose a picture.')

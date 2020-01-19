@@ -4,7 +4,7 @@
 <article class="media content-section">
   <div class="card h-100">
     <a href="{{ url_for('post', post_id=post.id) }}"><img class="card-img-top"
-        src="{{ url_for('static', filename='img/profile_pics/' + post.author.image_file) }}" alt=""></a>
+        src="{{ url_for('static', filename='img/post_pics/' + post.image_file) }}" alt=""></a>
     <div class="card-body media-body">
       <div class="article-metadata">
         <h4 class="card-title">
